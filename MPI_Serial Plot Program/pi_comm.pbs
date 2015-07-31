@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N pi_mpi_comm
+#PBS -l select=1:ncpus=12:mpiprocs=64:mem=64gb
+#PBS -l walltime=01:00:00
+#PBS -M nparchu@g.clemson.edu
+
+cd $PBS_O_WORKDIR
+
+module add gcc/4.4 mpich2/1.4-eth
+
+mpicc pi_mpi_comm.c -o pi_mpi_comm
+
+for i in 1 4 9 16 25 36 49 64
+do
+	mpirun -np $i ./pi_mpi_comm 1000000000 >> output_comm.txt
+done
+
+rm pi_mpi_comm
